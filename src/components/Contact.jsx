@@ -1,7 +1,7 @@
 import { useState, memo, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPhone, FaEnvelope, FaLinkedin, FaGithub, FaCopy, FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
-import emailjs from 'emailjs-com';
+import emailjs from '@emailjs/browser';
 import '../styles/theme.css';
 
 // EmailJS Configuration

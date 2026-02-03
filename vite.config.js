@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/portfolio/', // Change this to your GitHub repo name
+  base: '/', // ✅ FIXED
   server: {
     port: 3000,
     open: true
@@ -21,9 +21,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom'],
-          'animations': ['framer-motion'],
-          'icons': ['react-icons/fa']
+          vendor: ['react', 'react-dom'],
+          animations: ['framer-motion'],
+          icons: ['react-icons/fa']
         },
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',

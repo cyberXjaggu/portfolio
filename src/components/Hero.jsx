@@ -50,10 +50,6 @@ const Hero = ({ onExploreClick }) => {
             <div className="profile-ring"></div>
             <div className="profile-ring profile-ring-outer"></div>
             <img src={profileImg} alt="Jagarnath Mali" className="profile-img" />
-            <div className="profile-status">
-              <span className="status-indicator"></span>
-              <span className="status-text">Available</span>
-            </div>
           </div>
         </motion.div>
 

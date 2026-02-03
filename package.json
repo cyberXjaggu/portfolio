@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Modern cybersecurity portfolio website",
-  "homepage": "https://cyberXjaggu.github.io/portfolio",
+  "homepage": "/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,16 +11,16 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
-    "emailjs-com": "^3.2.0",
+    "@emailjs/browser": "^4.3.3",
     "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
-    "gh-pages": "^6.1.1",
+    "@vitejs/plugin-react": "^5.1.3",
+    "gh-pages": "^6.3.0",
     "terser": "^5.44.1",
-    "vite": "^5.0.0"
+    "vite": "^7.3.1"
   }
 }
