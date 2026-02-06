@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import {
   FaNetworkWired,
   FaShieldAlt,
-  FaChartLine,
   FaSearchPlus,
   FaLinux,
-  FaCheckCircle
+  FaCode,
+  FaMobileAlt
 } from 'react-icons/fa';
 import { SiCisco } from 'react-icons/si';
 import '../styles/theme.css';
@@ -16,37 +16,43 @@ const SKILL_CATEGORIES = [
     title: 'Routing & Switching',
     icon: FaNetworkWired,
     iconColor: '#00aaff',
-    skills: ['OSPF', 'EIGRP', 'VLAN', 'STP', 'NAT']
+    skills: ['IP Addressing (Basic)', 'Subnetting (Basic)', 'VLAN (Basic)', 'Routing Fundamentals (Basic)']
   },
   {
     title: 'Cisco / Networking',
     icon: SiCisco,
     iconColor: '#00ff41',
-    skills: ['Packet Tracer', 'Routers', 'Switches', 'VLAN', 'NAT', 'OSPF']
+    skills: ['Packet Tracer Labs (Basic)', 'Router Configuration (Basic)', 'Switch Configuration (Basic)']
   },
   {
-    title: 'Cyber Security',
+    title: 'Cybersecurity Fundamentals',
     icon: FaShieldAlt,
     iconColor: '#00ff41',
-    skills: ['Firewall', 'IDS/IPS', 'OWASP', 'Hardening']
-  },
-  {
-    title: 'SIEM Tools',
-    icon: FaCheckCircle,
-    iconColor: '#00ff41',
-    skills: ['Splunk', 'Azure Sentinel']
+    skills: ['Network Security Basics', 'Ethical Hacking Fundamentals', 'OSINT Basics', 'Firewall Concepts', 'IDS / IPS Concepts']
   },
   {
     title: 'Vulnerability Scanning',
     icon: FaSearchPlus,
     iconColor: '#00ff41',
-    skills: ['Nessus', 'OpenVAS', 'CVSS Assessment', 'Remediation']
+    skills: ['Nmap Scanning', 'CVSS Understanding (Basic)']
   },
   {
     title: 'Linux',
     icon: FaLinux,
     iconColor: '#ffcc00',
-    skills: ['Shell', 'Scripts', 'Troubleshooting']
+    skills: ['Linux CLI Usage', 'File Permissions (Basic)', 'Networking Commands (Basic)', 'Basic Troubleshooting']
+  },
+  {
+    title: 'Web Development',
+    icon: FaCode,
+    iconColor: '#00aaff',
+    skills: ['HTML, CSS, JavaScript', 'React (Learning)', 'Backend Basics', 'Full-Stack Learning Project']
+  },
+  {
+    title: 'Mobile App Development',
+    icon: FaMobileAlt,
+    iconColor: '#ffcc00',
+    skills: ['Beginner Mobile App Development', 'Android Studio (Beginner)', 'Simple Private Chat Application', 'Basic Authentication', 'Basic Real-Time Messaging']
   }
 ];
 
@@ -84,7 +90,7 @@ const Skills = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          Technical & Security Skills
+          Technical Skills
         </motion.h2>
 
         <motion.div

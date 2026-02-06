@@ -5,12 +5,12 @@ import '../styles/theme.css';
 import aboutImg from '../assets/about.jpg';
 
 const CORE_COMPETENCIES = [
-  { icon: FaShieldAlt, label: 'Vulnerability Assessment' },
-  { icon: FaNetworkWired, label: 'Network Security' },
-  { icon: FaBug, label: 'Penetration Testing' },
-  { icon: FaServer, label: 'SIEM Operations' },
-  { icon: FaLock, label: 'Security Hardening' },
-  { icon: FaTerminal, label: 'Linux Administration' }
+  { icon: FaShieldAlt, label: 'Cybersecurity Fundamentals' },
+  { icon: FaNetworkWired, label: 'Networking Basics' },
+  { icon: FaBug, label: 'Ethical Hacking (Beginner)' },
+  { icon: FaServer, label: 'Web Development' },
+  { icon: FaLock, label: 'OSINT & Recon' },
+  { icon: FaTerminal, label: 'Linux Command Line' }
 ];
 
 const ANIMATION_VARIANTS = {
@@ -64,22 +64,29 @@ const About = () => {
           {/* Left Column - Text Content */}
           <motion.div className="about-content" variants={containerVariants}>
             <motion.p className="about-intro" variants={itemVariants}>
-              Cybersecurity professional with hands-on expertise in network security,
-              vulnerability assessment, and incident response. Certified in Cisco networking
-              with practical experience in security operations and threat detection.
+              I am a 2nd year Computer Science student with a strong interest in
+              cybersecurity, networking, and web development. I enjoy exploring how
+              systems work and how to secure them, and I am actively building my
+              skills through coursework, self-study, and hands-on practice.
             </motion.p>
 
             <motion.p className="about-text" variants={itemVariants}>
-              Proficient in industry-standard security tools including <strong>Nmap</strong>,
-              <strong> Burp Suite</strong>, <strong>Metasploit</strong>, and SIEM platforms
-              like Splunk. Experienced in conducting security audits, implementing hardening
-              measures, and developing incident response protocols.
+              I have hands-on experience with <strong>Cisco Packet Tracer</strong> for
+              basic networking labs and use <strong>Linux</strong> regularly for
+              command-line practice. At the beginner level, I have explored cybersecurity
+              tools such as <strong>Nmap</strong>, <strong>Burp Suite</strong>,
+              <strong> Metasploit</strong>, and <strong>Wireshark</strong>, and I
+              practise on <strong>TryHackMe</strong> labs to reinforce my learning. I
+              also have early exposure to OSINT techniques and ethical hacking fundamentals.
             </motion.p>
 
             <motion.p className="about-text" variants={itemVariants}>
-              Currently focused on expanding expertise in cloud security, threat intelligence,
-              and advanced penetration testing methodologies. Committed to continuous learning
-              and contributing to enterprise security initiatives.
+              On the development side, I have built full-stack learning projects including
+              a simple private chat application and completed a college mini project. I am
+              also exploring beginner-level mobile app development. I have completed Cisco
+              Networking Academy courses in <strong>Introduction to Cybersecurity</strong> and
+              <strong> Introduction to Networks</strong>, and I continue to learn through
+              platforms like WsCube Tech and CyberMind Space on YouTube.
             </motion.p>
 
             {/* Core Competencies Grid */}
@@ -102,30 +109,30 @@ const About = () => {
               <div className="about-image-glow"></div>
               <img
                 src={aboutImg}
-                alt="Jagarnath Mali - Cybersecurity Professional"
+                alt="Jagarnath Mali - Computer Science Student"
                 className="about-headshot"
               />
               <div className="about-image-details">
                 <span className="detail-name">Jagarnath Mali</span>
-                <span className="detail-role">Security Engineer</span>
+                <span className="detail-role">CS Student | Aspiring Security Analyst</span>
               </div>
             </div>
 
             {/* Stats/Credentials */}
             <div className="about-credentials">
               <div className="credential-item">
-                <span className="credential-value">CCNA</span>
-                <span className="credential-label">Certified</span>
+                <span className="credential-value">Cisco</span>
+                <span className="credential-label">Intro to Cybersecurity</span>
               </div>
               <div className="credential-divider"></div>
               <div className="credential-item">
-                <span className="credential-value">CCNP</span>
-                <span className="credential-label">In Progress</span>
+                <span className="credential-value">Cisco</span>
+                <span className="credential-label">Intro to Networks</span>
               </div>
               <div className="credential-divider"></div>
               <div className="credential-item">
-                <span className="credential-value">SOC</span>
-                <span className="credential-label">Operations</span>
+                <span className="credential-value">THM</span>
+                <span className="credential-label">Practice Labs</span>
               </div>
             </div>
           </motion.div>
