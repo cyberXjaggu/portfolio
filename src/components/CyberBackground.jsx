@@ -59,15 +59,19 @@ const CyberBackground = () => {
       }
     };
 
+    if (!ctx) return undefined;
+
     resize();
     initNodes();
     initParticles();
 
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
       resize();
       initNodes();
       initParticles();
-    });
+    };
+
+    window.addEventListener('resize', handleResize);
 
     const animate = () => {
       if (prefersReducedMotion) {
@@ -170,7 +174,7 @@ const CyberBackground = () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 

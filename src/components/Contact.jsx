@@ -1,17 +1,25 @@
-import { useState, memo, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPhone, FaEnvelope, FaLinkedin, FaGithub, FaCopy, FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
 import '../styles/theme.css';
 
-// EmailJS Configuration
-const EMAILJS_SERVICE_ID = 'service_3qn9qqd';
-const EMAILJS_TEMPLATE_ID = 'template_jh2bboe';
-const EMAILJS_PUBLIC_KEY = '5kSLf7O0CVCCWZSAk';
+// EmailJS Configuration — loaded from environment variables (see .env.example)
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MY_EMAIL = 'jmail3553@gmail.com';
 const MY_PHONE = '+91-9216951330';
+
+// Input validation limits
+const MAX_NAME_LENGTH = 100;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_MESSAGE_LENGTH = 2000;
+
+// Rate limiting: minimum seconds between submissions
+const SUBMISSION_COOLDOWN_MS = 30_000;
 
 const ANIMATION_VARIANTS = {
   container: {
@@ -29,6 +37,35 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState({ type: '', message: '' });
   const [copiedType, setCopiedType] = useState(''); // 'email', 'phone', 'message', or ''
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
+  const statusTimeoutRef = useRef(null);
+  const copyTimeoutRef = useRef(null);
+  const cooldownTimerRef = useRef(null);
+  const lastSubmitTimeRef = useRef(0);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(statusTimeoutRef.current);
+      clearTimeout(copyTimeoutRef.current);
+      clearInterval(cooldownTimerRef.current);
+    };
+  }, []);
+
+  const startCooldown = useCallback(() => {
+    lastSubmitTimeRef.current = Date.now();
+    setCooldownRemaining(Math.ceil(SUBMISSION_COOLDOWN_MS / 1000));
+    clearInterval(cooldownTimerRef.current);
+    cooldownTimerRef.current = setInterval(() => {
+      const elapsed = Date.now() - lastSubmitTimeRef.current;
+      const remaining = Math.ceil((SUBMISSION_COOLDOWN_MS - elapsed) / 1000);
+      if (remaining <= 0) {
+        setCooldownRemaining(0);
+        clearInterval(cooldownTimerRef.current);
+      } else {
+        setCooldownRemaining(remaining);
+      }
+    }, 1000);
+  }, []);
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -38,20 +75,36 @@ const Contact = () => {
   }, [formStatus.type]);
 
   const validateForm = useCallback(() => {
-    if (!formData.name.trim()) {
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+
+    if (!trimmedName) {
       setFormStatus({ type: 'error', message: 'Name is required' });
       return false;
     }
-    if (!formData.email.trim()) {
+    if (trimmedName.length > MAX_NAME_LENGTH) {
+      setFormStatus({ type: 'error', message: `Name must be ${MAX_NAME_LENGTH} characters or fewer` });
+      return false;
+    }
+    if (!trimmedEmail) {
       setFormStatus({ type: 'error', message: 'Email is required' });
       return false;
     }
-    if (!EMAIL_REGEX.test(formData.email)) {
+    if (trimmedEmail.length > MAX_EMAIL_LENGTH) {
+      setFormStatus({ type: 'error', message: 'Email address is too long' });
+      return false;
+    }
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
       setFormStatus({ type: 'error', message: 'Invalid email format' });
       return false;
     }
-    if (!formData.message.trim()) {
+    if (!trimmedMessage) {
       setFormStatus({ type: 'error', message: 'Message cannot be empty' });
+      return false;
+    }
+    if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
+      setFormStatus({ type: 'error', message: `Message must be ${MAX_MESSAGE_LENGTH} characters or fewer` });
       return false;
     }
     return true;
@@ -59,7 +112,20 @@ const Contact = () => {
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
+
+    // Rate limiting check
+    if (cooldownRemaining > 0) {
+      setFormStatus({ type: 'error', message: `Please wait ${cooldownRemaining}s before sending another message.` });
+      return;
+    }
+
     if (!validateForm()) return;
+
+    // Check that EmailJS is configured
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      setFormStatus({ type: 'error', message: 'Contact form is not configured. Please email me directly.' });
+      return;
+    }
 
     setIsSubmitting(true);
     setFormStatus({ type: 'info', message: 'Sending message...' });
@@ -69,27 +135,36 @@ const Contact = () => {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
         },
         EMAILJS_PUBLIC_KEY
       );
       setFormStatus({ type: 'success', message: 'Message sent successfully! I\'ll get back to you soon.' });
       setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      console.error('EmailJS Error:', error);
+      startCooldown();
+    } catch {
       setFormStatus({ type: 'error', message: 'Failed to send message. Please try again or email me directly.' });
     } finally {
       setIsSubmitting(false);
-      setTimeout(() => setFormStatus({ type: '', message: '' }), 5000);
+      clearTimeout(statusTimeoutRef.current);
+      statusTimeoutRef.current = setTimeout(() => setFormStatus({ type: '', message: '' }), 5000);
     }
-  }, [formData, validateForm]);
+  }, [formData, validateForm, cooldownRemaining, startCooldown]);
 
   const handleCopy = useCallback((text, type) => {
+    if (!navigator.clipboard) {
+      setFormStatus({ type: 'error', message: 'Copy is not available in this browser.' });
+      return;
+    }
+
     navigator.clipboard.writeText(text).then(() => {
       setCopiedType(type);
-      setTimeout(() => setCopiedType(''), 2000);
+      clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => setCopiedType(''), 2000);
+    }).catch(() => {
+      setFormStatus({ type: 'error', message: 'Could not copy. Please copy the text manually.' });
     });
   }, []);
 
@@ -133,7 +208,13 @@ const Contact = () => {
               <h3 className="contact-subtitle">Contact Information</h3>
             </motion.div>
 
-            <motion.div className="contact-item" variants={itemVariants} onClick={() => handleCopy(MY_PHONE, 'phone')}>
+            <motion.button
+              type="button"
+              className="contact-item"
+              variants={itemVariants}
+              onClick={() => handleCopy(MY_PHONE, 'phone')}
+              aria-label={`Copy phone number ${MY_PHONE}`}
+            >
               <div className="contact-icon-box">
                 <FaPhone aria-hidden="true" />
               </div>
@@ -142,9 +223,15 @@ const Contact = () => {
                 <span className="contact-link">{MY_PHONE}</span>
                 {copiedType === 'phone' && <span className="copy-indicator">Copied!</span>}
               </div>
-            </motion.div>
+            </motion.button>
 
-            <motion.div className="contact-item" variants={itemVariants} onClick={() => handleCopy(MY_EMAIL, 'email')}>
+            <motion.button
+              type="button"
+              className="contact-item"
+              variants={itemVariants}
+              onClick={() => handleCopy(MY_EMAIL, 'email')}
+              aria-label={`Copy email ${MY_EMAIL}`}
+            >
               <div className="contact-icon-box">
                 <FaEnvelope aria-hidden="true" />
               </div>
@@ -153,7 +240,7 @@ const Contact = () => {
                 <span className="contact-link">{MY_EMAIL}</span>
                 {copiedType === 'email' && <span className="copy-indicator">Copied!</span>}
               </div>
-            </motion.div>
+            </motion.button>
 
             <motion.div variants={itemVariants} className="social-follow">
               <p>Follow Me</p>
@@ -179,6 +266,7 @@ const Contact = () => {
                   autoComplete="name"
                   value={formData.name}
                   onChange={handleInputChange}
+                  maxLength={MAX_NAME_LENGTH}
                   aria-label="Your Name"
                   required
                 />
@@ -191,6 +279,7 @@ const Contact = () => {
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  maxLength={MAX_EMAIL_LENGTH}
                   aria-label="Your Email"
                   required
                 />
@@ -202,6 +291,7 @@ const Contact = () => {
                   rows="5"
                   value={formData.message}
                   onChange={handleInputChange}
+                  maxLength={MAX_MESSAGE_LENGTH}
                   aria-label="Your Message"
                   required
                 ></textarea>
@@ -211,10 +301,10 @@ const Contact = () => {
                 <button
                   type="submit"
                   className={`btn-send ${isSubmitting ? 'submitting' : ''}`}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || cooldownRemaining > 0}
                 >
                   <FaPaperPlane className={isSubmitting ? 'spinning' : ''} />
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                  {isSubmitting ? 'Sending...' : cooldownRemaining > 0 ? `Wait ${cooldownRemaining}s` : 'Send Message'}
                 </button>
                 <button
                   type="button"

@@ -61,14 +61,20 @@ const BootLoader = ({ onLoadComplete }) => {
 
   // Trigger exit animation when complete
   useEffect(() => {
-    if (progress >= 100) {
-      setTimeout(() => {
-        setIsExiting(true);
-        setTimeout(() => {
-          onLoadComplete?.();
-        }, 500);
-      }, 300);
-    }
+    if (progress < 100) return undefined;
+
+    const exitTimer = setTimeout(() => {
+      setIsExiting(true);
+    }, 300);
+
+    const doneTimer = setTimeout(() => {
+      onLoadComplete?.();
+    }, 800);
+
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(doneTimer);
+    };
   }, [progress, onLoadComplete]);
 
   return (

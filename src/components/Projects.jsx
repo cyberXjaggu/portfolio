@@ -111,16 +111,18 @@ const Projects = () => {
                     <FaGithub size={14} />
                     GitHub
                   </a>
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button button-sm"
-                    aria-label={`View ${project.title} demo`}
-                  >
-                    <FaExternalLinkAlt size={14} />
-                    Demo
-                  </a>
+                  {project.demo && project.demo !== '#' && (
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="button button-sm"
+                      aria-label={`View ${project.title} demo`}
+                    >
+                      <FaExternalLinkAlt size={14} />
+                      Demo
+                    </a>
+                  )}
                 </div>
               </div>
             </motion.div>

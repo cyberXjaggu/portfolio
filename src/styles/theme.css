@@ -297,6 +297,8 @@
   align-items: center;
   gap: 1rem;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
   transition: all 0.3s ease;
   will-change: transform;
 }
@@ -376,6 +378,9 @@
   flex-direction: column;
   cursor: pointer;
   gap: 6px;
+  background: none;
+  border: none;
+  padding: 4px;
 }
 
 .hamburger span {
@@ -1223,6 +1228,10 @@
   align-items: center;
   gap: 1.25rem;
   padding: 1.25rem;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  color: inherit;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
@@ -1647,6 +1656,9 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  width: 100%;
+  font: inherit;
+  color: inherit;
 }
 
 .contact-item svg {

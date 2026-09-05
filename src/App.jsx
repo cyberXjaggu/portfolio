@@ -13,12 +13,23 @@ import CyberBackground from './components/CyberBackground';
 import './styles/global.css';
 import './styles/theme.css';
 
+// Allowlist of valid section IDs for hash-based navigation
+const VALID_SECTION_IDS = new Set([
+  'hero', 'about', 'skills', 'projects',
+  'certifications', 'education', 'contact'
+]);
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const skillsRef = useRef(null);
 
   const handleLoadComplete = useCallback(() => {
     setIsLoading(false);
+    const hash = window.location.hash.replace('#', '');
+    if (!hash || !VALID_SECTION_IDS.has(hash)) return;
+    requestAnimationFrame(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+    });
   }, []);
 
   const handleExploreSkills = useCallback(() => {

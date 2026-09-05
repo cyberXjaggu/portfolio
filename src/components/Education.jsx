@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { FaGraduationCap, FaBook } from 'react-icons/fa';
+import { FaGraduationCap } from 'react-icons/fa';
 import '../styles/theme.css';
 
 const EDUCATION_DATA = [
