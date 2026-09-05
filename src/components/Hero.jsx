@@ -67,11 +67,11 @@ const Hero = ({ onExploreClick }) => {
           <motion.div className="hero-divider" variants={itemVariants}></motion.div>
 
           <motion.p className="title" variants={itemVariants}>
-            Computer Science Student (2nd Year)
+            Computer Science Student (3rd Year)
           </motion.p>
 
           <motion.p className="hero-tagline" variants={itemVariants}>
-            I'm a second-year Computer Science student with a strong interest in cybersecurity and
+            I'm a third-year Computer Science student with a strong interest in cybersecurity and
             ethical hacking. I'm currently building my skills in networking, security fundamentals,
             and web technologies through hands-on projects and continuous learning.
           </motion.p>

@@ -64,7 +64,7 @@ const About = () => {
           {/* Left Column - Text Content */}
           <motion.div className="about-content" variants={containerVariants}>
             <motion.p className="about-intro" variants={itemVariants}>
-              I am a 2nd year Computer Science student with a strong interest in
+              I am a 3rd year Computer Science student with a strong interest in
               cybersecurity, networking, and web development. I enjoy exploring how
               systems work and how to secure them, and I am actively building my
               skills through coursework, self-study, and hands-on practice.
